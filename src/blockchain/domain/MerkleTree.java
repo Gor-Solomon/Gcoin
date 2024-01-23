@@ -1,26 +1,29 @@
-package myBlockchain.domain;
+package blockchain.domain;
 
-import java.util.ArrayList;
+import blockchain.domain.transactions.Transaction;
+import blockchain.services.CryptographyService;
+
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class MerkleTree {
 
-    private final List<String> transactions;
+    private final List<Transaction> transactions;
 
-    public MerkleTree(List<String> transactions) {
+    public MerkleTree(List<Transaction> transactions) {
         this.transactions = transactions;
     }
 
     public String getMerkelRoot(){
 
-        var copyOfTransactions = new ArrayList<String>(this.transactions);
+        var inputTransactions = this.transactions.stream().map(t -> t.getHash()).collect(Collectors.toList());
 
-        if (copyOfTransactions.size() % 2 == 1){
-            String tailReplica = copyOfTransactions.getLast();
-            copyOfTransactions.addLast(tailReplica);
+        if (inputTransactions.size() % 2 == 1){
+            var tailReplica = inputTransactions.getLast();
+            inputTransactions.addLast(tailReplica);
         }
 
-        var result = construct(copyOfTransactions);
+        var result = construct(inputTransactions);
 
         return result.getFirst();
     }
@@ -40,6 +43,6 @@ public class MerkleTree {
 
     private String mergeHash(String leftHash, String rightHash){
         final String concatenatedHash = leftHash + rightHash;
-        return SHA256Helper.generateHash(concatenatedHash);
+        return CryptographyService.generateHash(concatenatedHash);
     }
 }
