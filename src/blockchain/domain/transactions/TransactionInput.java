@@ -36,9 +36,10 @@ public class TransactionInput {
         this.UTXO = UTXO;
     }
 
-    public String getHashDigest(){
-        return "{\n" +
-                "'id': " + this.id + ",\n" +
-                "'TransactionOutputId': " + this.transactionOutputId + "}\n";
+    public String getHashDigest(String space){
+        space += space.isEmpty() ? "" : "   ";
+        return space  + "{\n" +
+                space + "   id: '" + this.id + "',\n" +
+                space + "   TransactionOutputId: '" + this.transactionOutputId + "'\n" + space + "}";
     }
 }

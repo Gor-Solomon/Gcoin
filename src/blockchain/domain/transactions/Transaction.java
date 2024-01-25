@@ -4,9 +4,7 @@ import blockchain.services.CryptographyService;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class Transaction {
@@ -89,12 +87,12 @@ public class Transaction {
     }
 
     public void generateSignature(PrivateKey privateKey){
-        String signatureDigest = getHashDigest();
+        String signatureDigest = getHashDigest("");
         this.signature = CryptographyService.sign(privateKey, signatureDigest);
     }
 
     public boolean verifySignature(){
-        String signatureDigest = getHashDigest();
+        String signatureDigest = getHashDigest("");
         return CryptographyService.verify(this.sender, signatureDigest, signature);
     }
 
@@ -114,7 +112,7 @@ public class Transaction {
     }
 
     public String getHash() {
-        var digest = getHashDigest();
+        var digest = getHashDigest("");
         return CryptographyService.generateHash(digest);
     }
     private String generateId() {
@@ -122,15 +120,14 @@ public class Transaction {
         return CryptographyService.generateHash(hashInput);
     }
 
-    public String getHashDigest() {
-        var signatureDigest = "{\n" + "'id': " + this.id + ",\n" +
-                               "'Sender': " + this.sender.toString() + ",\n"+
-                               "'Receiver': " + this.receiver.toString() + ",\n"+
-                               "'Amount': " +  this.amount + ",\n"+
-                               "'Inputs': [\n" + String.join(",\n", this.inputs.stream().sorted(Comparator.comparing(TransactionInput::getId)).map(TransactionInput::getHashDigest).collect(Collectors.toList())) + "],\n"+
-                               "'Outputs': [\n" +String.join(",\n", this.outputs.stream().sorted(Comparator.comparing(TransactionOutput::getId)).map(TransactionOutput::getHashDigest).collect(Collectors.toList()))+ "]\n}";
-
-        return signatureDigest;
+    public String getHashDigest(String space) {
+        var newspaper = space.isEmpty() ? "" : space + "    ";
+        return newspaper + "{\n" + newspaper + "   id: '" + this.id + "',\n" +
+                newspaper + "   Sender: '" +  this.sender.getEncoded().toString() + "',\n"+
+                newspaper + "   Receiver: '" + this.receiver.getEncoded().toString() + "',\n"+
+                newspaper + "   Amount: " +  this.amount + ",\n"+
+                newspaper + "   Inputs: [\n" + String.join(",\n", this.inputs.stream().sorted(Comparator.comparing(TransactionInput::getId)).map(t -> t.getHashDigest(newspaper)).collect(Collectors.toList())) + "],\n"+
+                newspaper + "   Outputs: [\n" +String.join(",\n", this.outputs.stream().sorted(Comparator.comparing(TransactionOutput::getId)).map(t -> t.getHashDigest(newspaper)).collect(Collectors.toList()))+ "]\n" + newspaper + "}";
     }
 
 

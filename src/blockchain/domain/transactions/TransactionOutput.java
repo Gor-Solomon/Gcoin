@@ -3,6 +3,8 @@ package blockchain.domain.transactions;
 import blockchain.services.CryptographyService;
 
 import java.security.PublicKey;
+import java.util.Arrays;
+import java.util.Base64;
 
 public class TransactionOutput {
 
@@ -10,13 +12,13 @@ public class TransactionOutput {
     private final String id;
 
     // transaction id of the parent where it was created in, for example input transaction X3W has 1 bitcoin to adam, then, this will be  X3W.
-    private String parentTransactionId;
+    private final String parentTransactionId;
 
     // the receiver of the bitcoin.
-    private PublicKey receiver;
+    private final PublicKey receiver;
 
     // The amount of the coin sent from the sender to the receiver.
-    private double amount;
+    private final double amount;
 
     public TransactionOutput(String parentTransactionId, PublicKey receiver, double amount) {
         this.parentTransactionId = parentTransactionId;
@@ -26,7 +28,7 @@ public class TransactionOutput {
     }
 
     private String generateId() {
-        var hashInput =  getHashDigest();
+        var hashInput =  getHashDigest("");
         return CryptographyService.generateHash(hashInput);
     }
 
@@ -51,11 +53,12 @@ public class TransactionOutput {
     }
 
 
-    public String getHashDigest(){
-        return "{\n" +
-                "'id': " + this.id + ",\n" +
-                "'Receiver': " + this.receiver.toString() + ",\n" +
-                "'Amount': " + this.amount + ",\n" +
-                "'ParentTransactionId': " + this.parentTransactionId + "}\n";
+    public String getHashDigest(String space){
+        space += space.isEmpty() ? "" : "   ";
+        return space +  "{\n" +
+                space+  "   id: '" + this.id + "',\n" +
+                space+  "   Receiver: \"" + this.receiver.getEncoded().toString() + "\",\n" +
+                space + "   Amount: " + this.amount + ",\n" +
+                space + "   ParentTransactionId: '" + this.parentTransactionId + "'\n" + space + "}";
     }
 }

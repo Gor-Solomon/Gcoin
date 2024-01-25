@@ -10,19 +10,27 @@ import java.security.PublicKey;
 import java.util.*;
 
 public class Wallet {
+
+    // this is just for testing purpose to know who transferred what by name.
+    private final String name;
     // user of the network.
 
     // Used for signature
-    private PrivateKey privateKey;
+    private final PrivateKey privateKey;
 
     // Used for verification
     // address: RIPMD (hash representation) public key, we use to generate the (160) bit point on curve.
-    private PublicKey publicKey;
+    private final PublicKey publicKey;
 
-    public Wallet() {
+    public Wallet(String name) {
         var kvp = CryptographyService.ellipticCurveCrypto();
         this.privateKey = kvp.getPrivate();
         this.publicKey = kvp.getPublic();
+        this.name = name;
+    }
+
+    public PublicKey getPublicKey() {
+        return publicKey;
     }
 
     // We are able to transfer money!
@@ -38,7 +46,7 @@ public class Wallet {
         var newTransactionInputs = new ArrayList<TransactionInput>();
         var newTransactionOutputs = new ArrayList<TransactionOutput>();
         var availableUto =blockChain.getUTXO(publicKey);
-        Collections.sort(availableUto, Comparator.comparingDouble(TransactionOutput::getAmount));
+        availableUto.sort(Comparator.comparingDouble(TransactionOutput::getAmount));
 
         while (topUp != 0){
             var transactionInput = availableUto.removeFirst();
@@ -64,8 +72,8 @@ public class Wallet {
         var transaction = new Transaction(this.publicKey, transferTo, amount, newTransactionInputs, newTransactionOutputs);
         transaction.generateSignature(privateKey);
 
-        var miner = new Miner();
-        miner.processTransactions(List.of(transaction), blockChain);
+        var miner = new Miner(blockChain);
+        miner.addTransaction(transaction);
 
         return transaction;
     }
@@ -73,14 +81,21 @@ public class Wallet {
     // ITXOs and consider all the transaction in the past
     public double calculateBalance(BlockChain blockChain){
 
-        double balance = 0;
-
         var walletTransactions = blockChain.getUTXO(publicKey);
 
         if (walletTransactions.stream().anyMatch(t -> !t.isOwner(this.publicKey))) {
             throw  new RuntimeException("User " + publicKey.toString() + " Has transaction that doesn't belongs to him");
         }
 
-        return  walletTransactions.stream().mapToDouble(t -> t.getAmount()).sum();
+        return  walletTransactions.stream().mapToDouble(TransactionOutput::getAmount).sum();
+    }
+
+    @Override
+    public String toString() {
+        return "Wallet {" +
+                "name='" + name + '\'' +
+                ", privateKey=" + privateKey +
+                ", publicKey=" + publicKey +
+                '}';
     }
 }

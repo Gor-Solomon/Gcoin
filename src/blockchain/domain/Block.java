@@ -11,19 +11,19 @@ import java.util.stream.Collectors;
 
 public class Block {
 
-    private int id;
+    private final int id;
 
     private int nonce = -1;
 
-    private long timeStamp;
+    private final long timeStamp;
 
     private String merkelRoot;
 
     private String hash;
 
-    private String previousHash;
+    private final String previousHash;
 
-    private List<Transaction> transactions;
+    private final List<Transaction> transactions;
 
     public Block(int id, List<Transaction> transactions, String previousHash){
         this.id = id;
@@ -51,14 +51,14 @@ public class Block {
         return hash;
     }
 
-    @Override
-    public String toString() {
-        var transactionsInfo = String.join(",\n", this.transactions.stream().map(t -> t.getHashDigest()).collect(Collectors.toList()));
-        return "Block {\n" +
-                "   id= " + id + "," + '\n' +
-                "   hash= '" + hash + "," + '\n' +
-                "   previousHash= '" + previousHash + "," + '\n' +
-                "   transactions = {\n" + transactionsInfo + "\n}";
+    public String getHashDigest(String space) {
+        var newSpace = space.isEmpty()? "" : space + "    ";
+        var transactionsInfo =  this.transactions.stream().map(t -> t.getHashDigest(newSpace)).collect(Collectors.joining(",\n"));
+        return  newSpace + "{\n" +
+                newSpace +  "   id: " + id + "," + '\n' +
+                newSpace + "   hash: '" + hash + "'," + '\n' +
+                newSpace + "   previousHash: '" + previousHash + "'," + '\n' +
+                newSpace + "   transactions: [\n" + transactionsInfo + "\n]" + "\n" + newSpace + "}";
     }
 
 

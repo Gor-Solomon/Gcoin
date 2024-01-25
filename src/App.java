@@ -15,14 +15,12 @@ public class App {
     public static void main(String[] args) {
         Security.addProvider(new BouncyCastleProvider());
 
-        var kvp = CryptographyService.ellipticCurveCrypto();
-
-        System.out.println(Base64.getEncoder().encodeToString(kvp.getPrivate().getEncoded()));
-        System.out.println(Base64.getEncoder().encodeToString(kvp.getPublic().getEncoded()));
+        BlockChain blockChain = new BlockChain();
+        System.out.println(blockChain.generateHashDigest(" "));
     }
 
     private void minerTest(){
-        Miner miner = new Miner();
+         // Miner miner = new Miner();
 
 //        var genesisBlock = new Block(BlockChain.getNextId(), (List<Transaction>) new Transaction(null, null, 0), Constants.GENESIS_PREVIOUS_HASH);
 //        miner.mine(genesisBlock);
