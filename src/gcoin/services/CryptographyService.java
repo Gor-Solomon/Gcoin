@@ -1,4 +1,4 @@
-package gCoin.services;
+package gcoin.services;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;

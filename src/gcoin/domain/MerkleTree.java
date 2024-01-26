@@ -1,7 +1,7 @@
-package gCoin.domain;
+package gcoin.domain;
 
-import gCoin.domain.transactions.Transaction;
-import gCoin.services.CryptographyService;
+import gcoin.domain.transactions.Transaction;
+import gcoin.services.CryptographyService;
 
 import java.util.List;
 import java.util.stream.Collectors;

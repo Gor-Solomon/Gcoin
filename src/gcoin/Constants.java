@@ -1,6 +1,6 @@
-package gCoin;
+package gcoin;
 
-import gCoin.domain.Wallet;
+import gcoin.domain.Wallet;
 
 import java.security.PublicKey;
 import java.util.HashMap;

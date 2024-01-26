@@ -1,4 +1,4 @@
-package gCoin.domain.transactions;
+package gcoin.domain.transactions;
 
 import java.util.UUID;
 

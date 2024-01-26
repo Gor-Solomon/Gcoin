@@ -1,8 +1,8 @@
-package gCoin.domain;
+package gcoin.domain;
 
-import gCoin.domain.transactions.Transaction;
-import gCoin.domain.transactions.TransactionOutput;
-import gCoin.services.CryptographyService;
+import gcoin.domain.transactions.Transaction;
+import gcoin.domain.transactions.TransactionOutput;
+import gcoin.services.CryptographyService;
 
 import java.security.PublicKey;
 import java.util.Date;

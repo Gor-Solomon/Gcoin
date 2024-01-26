@@ -1,7 +1,7 @@
-package gCoin.domain;
+package gcoin.domain;
 
-import gCoin.Constants;
-import gCoin.domain.transactions.Transaction;
+import gcoin.Constants;
+import gcoin.domain.transactions.Transaction;
 
 import java.util.LinkedList;
 import java.util.List;

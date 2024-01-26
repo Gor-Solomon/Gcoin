@@ -1,12 +1,15 @@
-import gCoin.domain.BlockChainRegistrar;
-import gCoin.domain.Miner;
-import gCoin.Constants;
-import gCoin.domain.Wallet;
+package presentation;
+
+import gcoin.domain.BlockChainRegistrar;
+import gcoin.domain.Miner;
+import gcoin.Constants;
+import gcoin.domain.Wallet;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Security;
 import java.util.ArrayList;
 import java.util.List;
+
 
 public class App {
 

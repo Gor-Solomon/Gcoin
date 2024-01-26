@@ -1,10 +1,10 @@
-package gCoin.domain;
+package gcoin.domain;
 
-import gCoin.Constants;
-import gCoin.domain.transactions.Transaction;
-import gCoin.domain.transactions.TransactionInput;
-import gCoin.domain.transactions.TransactionOutput;
-import gCoin.services.CryptographyService;
+import gcoin.Constants;
+import gcoin.domain.transactions.Transaction;
+import gcoin.domain.transactions.TransactionInput;
+import gcoin.domain.transactions.TransactionOutput;
+import gcoin.services.CryptographyService;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;

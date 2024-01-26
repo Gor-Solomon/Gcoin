@@ -1,7 +1,7 @@
-package gCoin.domain.transactions;
+package gcoin.domain.transactions;
 
-import gCoin.Constants;
-import gCoin.services.CryptographyService;
+import gcoin.Constants;
+import gcoin.services.CryptographyService;
 
 import java.security.PublicKey;
 
