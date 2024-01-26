@@ -1,10 +1,10 @@
-package blockchain.domain;
+package gCoin.domain;
 
-import blockchain.Constants;
-import blockchain.domain.transactions.Transaction;
-import blockchain.domain.transactions.TransactionInput;
-import blockchain.domain.transactions.TransactionOutput;
-import blockchain.services.CryptographyService;
+import gCoin.Constants;
+import gCoin.domain.transactions.Transaction;
+import gCoin.domain.transactions.TransactionInput;
+import gCoin.domain.transactions.TransactionOutput;
+import gCoin.services.CryptographyService;
 
 import java.security.PrivateKey;
 import java.security.PublicKey;
@@ -42,8 +42,8 @@ public class Wallet {
 
     // We are able to transfer money!
     // Miners of blockchain will put this transaction into the blockchain.
-    public Transaction createTransaction(PublicKey transferTo, double amount, BlockChain blockChain){
-        var balance = calculateBalance(blockChain);
+    public Transaction createTransaction(PublicKey transferTo, double amount, BlockChainRegistrar blockChainRegistrar){
+        var balance = calculateBalance(blockChainRegistrar);
 
         if (balance < amount){
             throw new RuntimeException("You don't have such amount to transfer!\n top-up your balance");
@@ -52,7 +52,7 @@ public class Wallet {
         double topUp = amount;
         var newTransactionInputs = new ArrayList<TransactionInput>();
         var newTransactionOutputs = new ArrayList<TransactionOutput>();
-        var availableUto =blockChain.getUTXO(publicKey);
+        var availableUto = blockChainRegistrar.getUTXO(publicKey);
         availableUto.sort(Comparator.comparingDouble(TransactionOutput::getAmount));
 
         while (topUp != 0){
@@ -86,9 +86,9 @@ public class Wallet {
     }
 
     // ITXOs and consider all the transaction in the past
-    public double calculateBalance(BlockChain blockChain){
+    public double calculateBalance(BlockChainRegistrar blockChainRegistrar){
 
-        var walletTransactions = blockChain.getUTXO(publicKey);
+        var walletTransactions = blockChainRegistrar.getUTXO(publicKey);
 
         if (walletTransactions.stream().anyMatch(t -> !t.isOwner(this.publicKey))) {
             throw  new RuntimeException("User " + publicKey.toString() + " Has transaction that doesn't belongs to him");
@@ -97,10 +97,10 @@ public class Wallet {
         return  walletTransactions.stream().mapToDouble(TransactionOutput::getAmount).sum();
     }
 
-    public String getInfo(BlockChain blockChain) {
+    public String getInfo(BlockChainRegistrar blockChainRegistrar) {
         return "Wallet{" + "\n" +
                 "name='" + name + "\n" +
-                "Balance='" + this.calculateBalance(blockChain)+ "\n" +
+                "Balance='" + this.calculateBalance(blockChainRegistrar)+ "\n" +
                 '}';
     }
 }

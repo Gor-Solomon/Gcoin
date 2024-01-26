@@ -1,7 +1,7 @@
-package blockchain.domain;
+package gCoin.domain;
 
-import blockchain.domain.transactions.Transaction;
-import blockchain.services.CryptographyService;
+import gCoin.domain.transactions.Transaction;
+import gCoin.services.CryptographyService;
 
 import java.util.List;
 import java.util.stream.Collectors;

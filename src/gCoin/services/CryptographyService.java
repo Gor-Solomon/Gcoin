@@ -1,4 +1,4 @@
-package blockchain.services;
+package gCoin.services;
 
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;

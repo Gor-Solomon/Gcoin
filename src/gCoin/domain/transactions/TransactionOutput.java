@@ -1,11 +1,9 @@
-package blockchain.domain.transactions;
+package gCoin.domain.transactions;
 
-import blockchain.Constants;
-import blockchain.services.CryptographyService;
+import gCoin.Constants;
+import gCoin.services.CryptographyService;
 
 import java.security.PublicKey;
-import java.util.Arrays;
-import java.util.Base64;
 
 public class TransactionOutput {
 

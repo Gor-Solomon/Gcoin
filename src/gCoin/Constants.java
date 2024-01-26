@@ -1,6 +1,6 @@
-package blockchain;
+package gCoin;
 
-import blockchain.domain.Wallet;
+import gCoin.domain.Wallet;
 
 import java.security.PublicKey;
 import java.util.HashMap;

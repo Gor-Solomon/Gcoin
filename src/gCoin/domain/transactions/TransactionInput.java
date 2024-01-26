@@ -1,4 +1,4 @@
-package blockchain.domain.transactions;
+package gCoin.domain.transactions;
 
 import java.util.UUID;
 

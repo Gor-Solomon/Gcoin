@@ -1,7 +1,7 @@
-package blockchain.domain;
+package gCoin.domain;
 
-import blockchain.Constants;
-import blockchain.domain.transactions.Transaction;
+import gCoin.Constants;
+import gCoin.domain.transactions.Transaction;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -9,14 +9,14 @@ import java.util.List;
 public class Miner {
 
     private static final String leadingZeros = "0".repeat(Constants.Difficulty);
-    private final BlockChain blockChain;
+    private final BlockChainRegistrar blockChainRegistrar;
 
     private double reward;
 
     private final List<Transaction> memPool;
 
-    public Miner(BlockChain blockChain) {
-        this.blockChain = blockChain;
+    public Miner(BlockChainRegistrar blockChainRegistrar) {
+        this.blockChainRegistrar = blockChainRegistrar;
         this.memPool = new LinkedList<>();
     }
 
@@ -41,20 +41,20 @@ public class Miner {
             this.memPool.add(transaction);
 
             if (memPool.size() > Constants.Mempool_Threshold){
-                this.createBlock(memPool, blockChain);
+                this.createBlock(memPool, blockChainRegistrar);
             }
         }
     }
 
-    private void createBlock(List<Transaction> newTransactions, BlockChain blockChain) {
+    private void createBlock(List<Transaction> newTransactions, BlockChainRegistrar blockChainRegistrar) {
 
-        var lastBlock = blockChain.getBlockChains().getLast();
-        var newBlock = new Block(blockChain.getNextId(), new LinkedList<>(newTransactions), lastBlock.getHash());
+        var lastBlock = blockChainRegistrar.getBlockChains().getLast();
+        var newBlock = new Block(blockChainRegistrar.getNextId(), new LinkedList<>(newTransactions), lastBlock.getHash());
 
         this.mine(newBlock);
 
         reward += Constants.REWARD;
-        blockChain.addBlock(newBlock);
+        blockChainRegistrar.addBlock(newBlock);
         newTransactions.clear();
     }
 

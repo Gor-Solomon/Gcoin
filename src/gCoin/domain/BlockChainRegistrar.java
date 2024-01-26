@@ -1,9 +1,9 @@
-package blockchain.domain;
+package gCoin.domain;
 
-import blockchain.Constants;
-import blockchain.domain.transactions.Transaction;
-import blockchain.domain.transactions.TransactionInput;
-import blockchain.domain.transactions.TransactionOutput;
+import gCoin.Constants;
+import gCoin.domain.transactions.Transaction;
+import gCoin.domain.transactions.TransactionInput;
+import gCoin.domain.transactions.TransactionOutput;
 
 import java.security.PublicKey;
 import java.util.ArrayList;
@@ -11,12 +11,12 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class BlockChain {
+public class BlockChainRegistrar {
 
     private int idSequence = 0;
     private final List<Block> blockChains;
 
-    public BlockChain() {
+    public BlockChainRegistrar() {
         this.blockChains = new LinkedList<>();
         var genesisBlock = generateGenesisBlock();
         this.blockChains.add(genesisBlock);

@@ -1,8 +1,8 @@
-package blockchain.domain;
+package gCoin.domain;
 
-import blockchain.domain.transactions.Transaction;
-import blockchain.domain.transactions.TransactionOutput;
-import blockchain.services.CryptographyService;
+import gCoin.domain.transactions.Transaction;
+import gCoin.domain.transactions.TransactionOutput;
+import gCoin.services.CryptographyService;
 
 import java.security.PublicKey;
 import java.util.Date;

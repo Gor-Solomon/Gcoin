@@ -1,2 +1,2 @@
 # myBlockChain
-simple blockchain implementation to understand the idia
+simple gCoin implementation to understand the idia
