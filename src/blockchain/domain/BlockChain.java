@@ -43,8 +43,9 @@ public class BlockChain {
 
         chain.append(space + "[").append('\n');
         for (Block block : this.blockChains){
-            chain.append(block.getHashDigest(space)).append("\n");
+            chain.append(block.getHashDigest(new String(space))).append(",\n");
         }
+        chain.deleteCharAt(chain.length() - 2);
         chain.append(space).append("]");
 
         return chain.toString();
@@ -57,15 +58,17 @@ public class BlockChain {
     private Block generateGenesisBlock() {
         var id = this.getNextId();
         List<Transaction> genesisTransaction = generateGenesisTransaction();
+        var newBlock = new Block(id, genesisTransaction, Constants.GENESIS_PREVIOUS_HASH);
+        var miner = new Miner(this);
 
-        return new Block(id, genesisTransaction, Constants.GENESIS_PREVIOUS_HASH);
+        return miner.mine(newBlock);
     }
 
     private List<Transaction> generateGenesisTransaction() {
 
         List<Transaction> transactions = new ArrayList<>();
         var txnOutput = new TransactionOutput(Constants.GENESIS_PREVIOUS_Transaction_Id, Constants.GENESIS_Wallet.getPublicKey(), Constants.GENESIS_Transaction_Amount);
-        var txnIn = new TransactionInput(txnOutput.getId());
+        var txnIn = new TransactionInput(null, txnOutput.getId());
         txnIn.setUTXO(txnOutput);
 
         List<TransactionOutput> outputs = new ArrayList<>(List.of(txnOutput));

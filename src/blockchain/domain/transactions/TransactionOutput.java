@@ -1,5 +1,6 @@
 package blockchain.domain.transactions;
 
+import blockchain.Constants;
 import blockchain.services.CryptographyService;
 
 import java.security.PublicKey;
@@ -56,9 +57,9 @@ public class TransactionOutput {
     public String getHashDigest(String space){
         space += space.isEmpty() ? "" : "   ";
         return space +  "{\n" +
-                space+  "   id: '" + this.id + "',\n" +
-                space+  "   Receiver: \"" + this.receiver.getEncoded().toString() + "\",\n" +
-                space + "   Amount: " + this.amount + ",\n" +
-                space + "   ParentTransactionId: '" + this.parentTransactionId + "'\n" + space + "}";
+                " " + space+  "   id: '" + this.id + "',\n" +
+                " " + space+  "   Receiver: \"" + Constants.Wallet_Names.get(this.receiver) + "\",\n" +
+                " " + space + "   Amount: " + this.amount + ",\n" +
+                " " + space + "   ParentTransactionId: '" + this.parentTransactionId + "'\n" + space + "}";
     }
 }

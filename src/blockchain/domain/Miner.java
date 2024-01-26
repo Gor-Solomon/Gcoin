@@ -28,7 +28,7 @@ public class Miner {
 
         while (!isGoldenHash(block)){
             block.incrementNonce();
-            block.generateHash();
+            block.updateHash();
         }
 
         return block;
@@ -40,7 +40,7 @@ public class Miner {
 
             this.memPool.add(transaction);
 
-            if (memPool.size() > 9){
+            if (memPool.size() > Constants.Mempool_Threshold){
                 this.createBlock(memPool, blockChain);
             }
         }
@@ -49,7 +49,7 @@ public class Miner {
     private void createBlock(List<Transaction> newTransactions, BlockChain blockChain) {
 
         var lastBlock = blockChain.getBlockChains().getLast();
-        var newBlock = new Block(blockChain.getNextId(), newTransactions, lastBlock.getHash());
+        var newBlock = new Block(blockChain.getNextId(), new LinkedList<>(newTransactions), lastBlock.getHash());
 
         this.mine(newBlock);
 
@@ -60,5 +60,12 @@ public class Miner {
 
     private boolean isGoldenHash(Block block){
         return block.getHash().startsWith(leadingZeros);
+    }
+
+    @Override
+    public String toString() {
+        return "Miner{" +
+                "\nreward=" + reward +
+                "\n}";
     }
 }

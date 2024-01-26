@@ -31,7 +31,7 @@ public class Block {
         this.previousHash = previousHash;
         this.timeStamp = new Date().getTime();
         this.merkelRoot = calculateMerkelRoot();
-        this.hash = generateHash();
+        updateHash();
     }
 
     public void incrementNonce(){
@@ -42,9 +42,9 @@ public class Block {
         return transactions.stream().flatMap(t -> t.getOutputs(publicKey).stream()).collect(Collectors.toList());
     }
 
-    public String generateHash(){
+    public void updateHash(){
         var dataToHash = this.id + this.previousHash + this.timeStamp + this.nonce + this.merkelRoot;
-        return CryptographyService.generateHash(dataToHash);
+        this.hash = CryptographyService.generateHash(dataToHash);
     }
 
     public String getHash() {
@@ -55,10 +55,11 @@ public class Block {
         var newSpace = space.isEmpty()? "" : space + "    ";
         var transactionsInfo =  this.transactions.stream().map(t -> t.getHashDigest(newSpace)).collect(Collectors.joining(",\n"));
         return  newSpace + "{\n" +
-                newSpace +  "   id: " + id + "," + '\n' +
-                newSpace + "   hash: '" + hash + "'," + '\n' +
-                newSpace + "   previousHash: '" + previousHash + "'," + '\n' +
-                newSpace + "   transactions: [\n" + transactionsInfo + "\n]" + "\n" + newSpace + "}";
+                newSpace +  "   id: "             + this.id + "," + '\n' +
+                newSpace + "   merkelRoot: '"     + this.merkelRoot + "'," + '\n' +
+                newSpace + "   hash: '"           + this.hash + "'," + '\n' +
+                newSpace + "   previousHash: '"   + this.previousHash + "'," + '\n' +
+                newSpace + "   transactions: [\n" + transactionsInfo + "]\n" + newSpace + "}";
     }
 
 

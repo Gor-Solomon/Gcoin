@@ -1,5 +1,6 @@
 package blockchain.domain.transactions;
 
+import blockchain.Constants;
 import blockchain.services.CryptographyService;
 
 import java.security.PrivateKey;
@@ -123,8 +124,8 @@ public class Transaction {
     public String getHashDigest(String space) {
         var newspaper = space.isEmpty() ? "" : space + "    ";
         return newspaper + "{\n" + newspaper + "   id: '" + this.id + "',\n" +
-                newspaper + "   Sender: '" +  this.sender.getEncoded().toString() + "',\n"+
-                newspaper + "   Receiver: '" + this.receiver.getEncoded().toString() + "',\n"+
+                newspaper + "   Sender: '" + Constants.Wallet_Names.get(this.sender) + "',\n"+
+                newspaper + "   Receiver: '" + Constants.Wallet_Names.get(this.receiver) + "',\n"+
                 newspaper + "   Amount: " +  this.amount + ",\n"+
                 newspaper + "   Inputs: [\n" + String.join(",\n", this.inputs.stream().sorted(Comparator.comparing(TransactionInput::getId)).map(t -> t.getHashDigest(newspaper)).collect(Collectors.toList())) + "],\n"+
                 newspaper + "   Outputs: [\n" +String.join(",\n", this.outputs.stream().sorted(Comparator.comparing(TransactionOutput::getId)).map(t -> t.getHashDigest(newspaper)).collect(Collectors.toList()))+ "]\n" + newspaper + "}";

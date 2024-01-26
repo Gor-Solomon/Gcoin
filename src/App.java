@@ -1,13 +1,11 @@
-import blockchain.domain.Block;
 import blockchain.domain.BlockChain;
 import blockchain.domain.Miner;
 import blockchain.Constants;
-import blockchain.domain.transactions.Transaction;
-import blockchain.services.CryptographyService;
+import blockchain.domain.Wallet;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
 import java.security.Security;
-import java.util.Base64;
+import java.util.ArrayList;
 import java.util.List;
 
 public class App {
@@ -16,23 +14,36 @@ public class App {
         Security.addProvider(new BouncyCastleProvider());
 
         BlockChain blockChain = new BlockChain();
+        var miner = new Miner(blockChain);
+        List<Wallet> luckyWallets = new ArrayList<>(List.of(new Wallet("Gorun"),  new Wallet("Vasil"),  new Wallet("Ahmed")));
+
+        for (var luckyWallet : luckyWallets)
+        {
+            var txn = Constants.GENESIS_Wallet.createTransaction(luckyWallet.getPublicKey(), 10, blockChain);
+            miner.addTransaction(txn);
+        }
+
+        var coins = 1;
+        var birthdayBoy = new Wallet("Birthday Boy");
+        for (var luckyWallet : luckyWallets)
+        {
+            var txn = luckyWallet.createTransaction(birthdayBoy.getPublicKey(), coins++, blockChain);
+            miner.addTransaction(txn);
+        }
+
+        luckyWallets.add(birthdayBoy);
+
         System.out.println(blockChain.generateHashDigest(" "));
-    }
 
-    private void minerTest(){
-         // Miner miner = new Miner();
+        for (var luckyWallet : luckyWallets)
+        {
+            System.out.println();
+            System.out.println(luckyWallet.getInfo(blockChain));
+        }
 
-//        var genesisBlock = new Block(BlockChain.getNextId(), (List<Transaction>) new Transaction(null, null, 0), Constants.GENESIS_PREVIOUS_HASH);
-//        miner.mine(genesisBlock);
-//
-//        BlockChain blockChain = new BlockChain(genesisBlock);
+        System.out.println();
+        System.out.println(miner);
 
-//
-//        miner.processTransactions("Sendding 1000 Bitcoin from Jack To Jon", blockChain);
-//        miner.processTransactions("Sendding 500 Bitcoin from Mery To Peeter", blockChain);
-//        miner.processTransactions("Sendding 33.5 Bitcoin from Jon To Kale", blockChain);
-//
-//        System.out.println(blockChain);
     }
 
 }

@@ -1,5 +1,6 @@
 package blockchain.domain;
 
+import blockchain.Constants;
 import blockchain.domain.transactions.Transaction;
 import blockchain.domain.transactions.TransactionInput;
 import blockchain.domain.transactions.TransactionOutput;
@@ -22,11 +23,17 @@ public class Wallet {
     // address: RIPMD (hash representation) public key, we use to generate the (160) bit point on curve.
     private final PublicKey publicKey;
 
+
     public Wallet(String name) {
         var kvp = CryptographyService.ellipticCurveCrypto();
         this.privateKey = kvp.getPrivate();
         this.publicKey = kvp.getPublic();
         this.name = name;
+        Constants.Wallet_Names.put(this.publicKey, this.name);
+    }
+
+    public String getName() {
+        return name;
     }
 
     public PublicKey getPublicKey() {
@@ -35,7 +42,7 @@ public class Wallet {
 
     // We are able to transfer money!
     // Miners of blockchain will put this transaction into the blockchain.
-    public Transaction transferMoney(PublicKey transferTo, double amount, BlockChain blockChain){
+    public Transaction createTransaction(PublicKey transferTo, double amount, BlockChain blockChain){
         var balance = calculateBalance(blockChain);
 
         if (balance < amount){
@@ -52,28 +59,28 @@ public class Wallet {
             var transactionInput = availableUto.removeFirst();
             var localAmount = transactionInput.getAmount() - topUp;
 
-            if (localAmount < 0){
+            // Use oldest transactions first.
+            if (localAmount <= 0){
                 TransactionOutput txo = new TransactionOutput(transactionInput.getId(), transferTo, transactionInput.getAmount());
                 newTransactionOutputs.add(txo);
                 topUp = Math.abs(localAmount);
             }
 
+            // Return the change to the sender.
             if (localAmount > 0){
-                TransactionOutput txo = new TransactionOutput(transactionInput.getId(), transferTo, transactionInput.getAmount());
-                newTransactionOutputs.add(txo);
                 TransactionOutput myTxo = new TransactionOutput(transactionInput.getId(), publicKey, localAmount);
                 newTransactionOutputs.add(myTxo);
-                topUp = Math.abs(localAmount);
+
+                TransactionOutput txo = new TransactionOutput(transactionInput.getId(), transferTo, topUp);
+                newTransactionOutputs.add(txo);
+                topUp = 0;
             }
 
-            newTransactionInputs.add(new TransactionInput(newTransactionOutputs.getLast().getId()));
+            newTransactionInputs.add(new TransactionInput(transactionInput.getId(), newTransactionOutputs.getLast().getId()));
         }
 
         var transaction = new Transaction(this.publicKey, transferTo, amount, newTransactionInputs, newTransactionOutputs);
         transaction.generateSignature(privateKey);
-
-        var miner = new Miner(blockChain);
-        miner.addTransaction(transaction);
 
         return transaction;
     }
@@ -90,12 +97,10 @@ public class Wallet {
         return  walletTransactions.stream().mapToDouble(TransactionOutput::getAmount).sum();
     }
 
-    @Override
-    public String toString() {
-        return "Wallet {" +
-                "name='" + name + '\'' +
-                ", privateKey=" + privateKey +
-                ", publicKey=" + publicKey +
+    public String getInfo(BlockChain blockChain) {
+        return "Wallet{" + "\n" +
+                "name='" + name + "\n" +
+                "Balance='" + this.calculateBalance(blockChain)+ "\n" +
                 '}';
     }
 }

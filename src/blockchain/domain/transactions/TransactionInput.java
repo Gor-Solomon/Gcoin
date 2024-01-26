@@ -6,14 +6,17 @@ public class TransactionInput {
 
     private final UUID id;
 
+    private final String referenceTransactionInputId;
+
     // Every input has an output, this is the id of output
     public String transactionOutputId;
 
     private TransactionOutput UTXO;
 
-    public TransactionInput(String transactionOutputId) {
-        this.transactionOutputId = transactionOutputId;
+    public TransactionInput(String referenceTransactionInputId, String transactionOutputId) {
         this.id = UUID.randomUUID();
+        this.referenceTransactionInputId = referenceTransactionInputId;
+        this.transactionOutputId = transactionOutputId;
     }
 
     public UUID getId() { return id; }
@@ -39,7 +42,8 @@ public class TransactionInput {
     public String getHashDigest(String space){
         space += space.isEmpty() ? "" : "   ";
         return space  + "{\n" +
-                space + "   id: '" + this.id + "',\n" +
-                space + "   TransactionOutputId: '" + this.transactionOutputId + "'\n" + space + "}";
+                " " + space + "   id: '" + this.id + "',\n" +
+                " " + space + "   TransactionInputId: '" + this.referenceTransactionInputId + "',\n" +
+                " " + space + "   TransactionOutputId: '" + this.transactionOutputId + "'\n" + space + "}";
     }
 }
